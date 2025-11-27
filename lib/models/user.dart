@@ -7,11 +7,9 @@ class User {
   final String email;
   final String firstName;
   final String lastName;
-  final String isActivated;
-  final String isVerified;
-  // Optional fields have a '?' to indicate they can be null
-  final String? farmerID;
-  final String? phoneNumber;
+  final bool isActivated;
+  final bool isVerified;
+  final String role;
 
   // Constructor for the User class
   User({
@@ -21,9 +19,7 @@ class User {
     required this.lastName,
     required this.isActivated,
     required this.isVerified,
-    // Nullable fields do not require 'required' keyword
-    this.farmerID,
-    this.phoneNumber,
+    required this.role,
   });
 
   // Factory method to create a User from JSON
@@ -33,10 +29,9 @@ class User {
       email: json['email'],
       firstName: json['first_name'],
       lastName: json['last_name'],
-      isActivated: json['is_activated'],
-      isVerified: json['is_verified'],
-      farmerID: json['farmer_id'],
-      phoneNumber: json['phone_number'],
+      isActivated: json['is_activated'] ?? false,
+      isVerified: json['is_verified'] ?? false,
+      role: json['role'] ?? 'staff',
     );
   }
 
@@ -49,8 +44,7 @@ class User {
       'last_name': lastName,
       'is_activated': isActivated,
       'is_verified': isVerified,
-      'farmer_id': farmerID,
-      'phone_number': phoneNumber,
+      'role': role,
     };
   }
 }

@@ -1,7 +1,11 @@
 // File: lib/constants.dart
 
 // API configuration constants
-// Ip Address for the backend server
-const String ipAddress = '192.168.1.139:8080';
-// Base URL for API requests
-const String apiBaseUrl = 'http://$ipAddress/';
+// Note: IP address is now managed through AppPreferences
+// This file maintains backward compatibility but the app
+// should use AppPreferences.getApiBaseUrl() for dynamic configuration
+
+// Default values (can be overridden in settings)
+const String defaultIpAddress = '127.0.0.1';
+const String defaultPort = '8080';
+

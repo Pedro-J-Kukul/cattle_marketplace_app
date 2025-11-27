@@ -1,5 +1,7 @@
+// File: lib/screens/auth/signup_screen.dart
+
 import 'package:flutter/material.dart';
-import '../services/signup_service.dart';
+import '../../services/auth_service.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -13,8 +15,6 @@ class _SignupScreenState extends State<SignupScreen> {
   final passwordController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
-  final farmerIdController = TextEditingController();
-  final phoneNumberController = TextEditingController();
 
   bool isLoading = false;
   String? errorMessage;
@@ -25,8 +25,6 @@ class _SignupScreenState extends State<SignupScreen> {
     passwordController.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
-    farmerIdController.dispose();
-    phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -40,17 +38,8 @@ class _SignupScreenState extends State<SignupScreen> {
     final password = passwordController.text;
     final firstName = firstNameController.text.trim();
     final lastName = lastNameController.text.trim();
-    final farmerId = farmerIdController.text.trim();
-    final phoneNumber = phoneNumberController.text.trim();
 
-    if ([
-      email,
-      password,
-      firstName,
-      lastName,
-      farmerId,
-      phoneNumber,
-    ].any((e) => e.isEmpty)) {
+    if ([email, password, firstName, lastName].any((e) => e.isEmpty)) {
       setState(() {
         isLoading = false;
         errorMessage = 'Please fill out all fields.';
@@ -59,13 +48,11 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     try {
-      await SignupService.signup(
+      await AuthService.register(
         email: email,
         password: password,
         firstName: firstName,
         lastName: lastName,
-        farmerID: farmerId,
-        phoneNumber: phoneNumber,
       );
       setState(() {
         isLoading = false;
@@ -93,49 +80,78 @@ class _SignupScreenState extends State<SignupScreen> {
             children: [
               TextField(
                 controller: emailController,
-                decoration: const InputDecoration(labelText: "Email"),
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.emailAddress,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
               TextField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(labelText: "Password"),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: firstNameController,
-                decoration: const InputDecoration(labelText: "First Name"),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: lastNameController,
-                decoration: const InputDecoration(labelText: "Last Name"),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: farmerIdController,
-                decoration: const InputDecoration(labelText: "Farmer ID"),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: phoneNumberController,
-                decoration: const InputDecoration(labelText: "Phone Number"),
+                decoration: const InputDecoration(
+                  labelText: "Password",
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 16),
+              TextField(
+                controller: firstNameController,
+                decoration: const InputDecoration(
+                  labelText: "First Name",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: lastNameController,
+                decoration: const InputDecoration(
+                  labelText: "Last Name",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 24),
               if (errorMessage != null)
-                Text(errorMessage!, style: const TextStyle(color: Colors.red)),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    border: Border.all(color: Colors.red),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.error, color: Colors.red),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          errorMessage!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               SizedBox(
                 width: double.infinity,
+                height: 48,
                 child: ElevatedButton(
                   onPressed: isLoading ? null : _handleSignup,
                   child: isLoading
-                      ? const CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
                         )
                       : const Text('Sign Up'),
                 ),
               ),
+              const SizedBox(height: 16),
               TextButton(
                 onPressed: isLoading
                     ? null
