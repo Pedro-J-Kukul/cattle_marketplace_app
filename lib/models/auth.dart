@@ -1,11 +1,21 @@
-// File: lib/models/auth/auth_token.dart 
+// File: lib/models/auth.dart 
 class AuthToken {
-  final String plaintext;
-  AuthToken({required this.plaintext});
+  final String token;
+  final String? expiry;
+
+  AuthToken({required this.token, this.expiry});
 
   factory AuthToken.fromJson(Map<String, dynamic> json) {
     return AuthToken(
-      plaintext: json['plaintext'],
+      token: json['token'],
+      expiry: json['expiry'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'token': token,
+      'expiry': expiry,
+    };
   }
 }
